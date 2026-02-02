@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f absen-app || true
-                docker run -d --name absen-app -p 8082:80 absen-app:latest
+                docker run -d --name absen-app -p 8084:80 absen-app:latest
                 '''
             }
         }
