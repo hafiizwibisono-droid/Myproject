@@ -1,0 +1,49 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = "absen-app"
+    CONTAINER_NAME = "absen-app"
+    PORT = "8083"
+  }
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh '''
+        docker build -t ${IMAGE_NAME}:latest .
+        '''
+      }
+    }
+
+    stage('Deploy Container') {
+      steps {
+        sh '''
+        docker stop ${CONTAINER_NAME} || true
+        docker rm ${CONTAINER_NAME} || true
+
+        docker run -d \
+          --name ${CONTAINER_NAME} \
+          -p ${PORT}:80 \
+          ${IMAGE_NAME}:latest
+        '''
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ Deploy sukses! Akses di http://IP-SERVER:${PORT}"
+    }
+    failure {
+      echo "❌ Deploy gagal. Cek log Jenkins."
+    }
+  }
+}
