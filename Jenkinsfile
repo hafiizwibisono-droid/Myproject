@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build Docker') {
             steps {
-                sh 'docker build -t saham-backend ./saham-app/backend'
+                sh 'docker build -t saham-backend ./backend'
             }
         }
 
